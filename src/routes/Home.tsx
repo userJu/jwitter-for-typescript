@@ -10,6 +10,8 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { useEffect, useState } from "react";
+import Tweet from "../components/Tweet";
+import { runInNewContext } from "vm";
 
 interface ITweets {
   text: string;
@@ -18,15 +20,19 @@ interface ITweets {
   userId: {
     uid: string;
   };
+  creatorId: string;
 }
 
 interface IHomeprops {
-  userObj: object;
+  userObj: {
+    uid: string;
+  };
 }
 
 function Home({ userObj }: IHomeprops) {
   const { register, handleSubmit, setValue } = useForm();
   const [tweets, setTweets] = useState<ITweets[]>([]);
+  const [attachment, setAttachment] = useState();
   //
   // const getTweets = async () => {
   //   // const docSnap = await getDoc(collection(db, "tweets"));
@@ -53,13 +59,23 @@ function Home({ userObj }: IHomeprops) {
   //   });
   // };
   //
-  const onSubmit = async ({ tweet }: any) => {
-    await addDoc(collection(db, "tweets"), {
-      tweet,
-      createdAt: Date.now(),
-      creatorId: userObj,
-    });
-    setValue("tweet", "");
+  const onSubmit = async ({ tweet, image }: any) => {
+    console.log(image);
+    const file = image[0];
+    // fileReader API 사용
+    const reader = new FileReader();
+    reader.onloadend = (finishedEvent) => {
+      const targetResult: any = finishedEvent.target?.result;
+
+      setAttachment(targetResult);
+    };
+    reader.readAsDataURL(file);
+    // await addDoc(collection(db, "tweets"), {
+    //   tweet,
+    //   createdAt: Date.now(),
+    //   creatorId: userObj.uid,
+    // });
+    // setValue("tweet", "");
   };
 
   useEffect(() => {
@@ -68,6 +84,7 @@ function Home({ userObj }: IHomeprops) {
       const tweetArray: any = querySnapshot.docs.map((doc) => ({
         text: doc.data().tweet,
         createdAt: doc.data().createdAt,
+        creatorId: doc.data().creatorId,
         id: doc.id,
         userId: doc.data().creatorId,
       }));
@@ -84,13 +101,16 @@ function Home({ userObj }: IHomeprops) {
           type="text"
           placeholder="What's on your mind?"
         />
+        <input type="file" accept="image/*" {...register("image")} />
         <input type="submit" value="Tweet" />
       </form>
       <div>
         {tweets.map((tweet) => (
-          <div key={tweet.id}>
-            <h4>{tweet.text}</h4>
-          </div>
+          <Tweet
+            key={tweet.id}
+            tweetObj={tweet}
+            isOwner={tweet.creatorId === userObj.uid}
+          />
         ))}
       </div>
     </div>

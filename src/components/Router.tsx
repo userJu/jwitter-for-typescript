@@ -6,7 +6,9 @@ import Navigation from "./Navigation";
 
 interface AppRouterProps {
   isLoggedIn: boolean;
-  userObj: object;
+  userObj: {
+    uid: string;
+  };
 }
 
 const AppRouter = ({ isLoggedIn, userObj }: AppRouterProps) => {

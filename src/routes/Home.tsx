@@ -8,10 +8,12 @@ import {
   onSnapshot,
   doc,
 } from "firebase/firestore";
-import { db } from "../firebase";
+import { db, storage } from "../firebase";
 import { useEffect, useState } from "react";
 import Tweet from "../components/Tweet";
 import { runInNewContext } from "vm";
+import { getStorage, ref, uploadString } from "firebase/storage";
+import { v4 as uuidv4 } from "uuid";
 
 interface ITweets {
   text: string;
@@ -30,9 +32,9 @@ interface IHomeprops {
 }
 
 function Home({ userObj }: IHomeprops) {
-  const { register, handleSubmit, setValue } = useForm();
+  const { register, handleSubmit, setValue, watch } = useForm();
   const [tweets, setTweets] = useState<ITweets[]>([]);
-  const [attachment, setAttachment] = useState();
+  const [attachment, setAttachment] = useState<null | string>(null);
   //
   // const getTweets = async () => {
   //   // const docSnap = await getDoc(collection(db, "tweets"));
@@ -59,23 +61,40 @@ function Home({ userObj }: IHomeprops) {
   //   });
   // };
   //
-  const onSubmit = async ({ tweet, image }: any) => {
-    console.log(image);
-    const file = image[0];
-    // fileReader API 사용
-    const reader = new FileReader();
-    reader.onloadend = (finishedEvent) => {
-      const targetResult: any = finishedEvent.target?.result;
 
-      setAttachment(targetResult);
-    };
-    reader.readAsDataURL(file);
+  const onSubmit = async ({ tweet, image }: any) => {
+    // Create a child reference
+    const imagesRef = ref(storage, `${userObj.uid}/${uuidv4()}`);
+
+    if (attachment !== null) {
+      uploadString(imagesRef, attachment, "data_url").then((snapshot) => {
+        console.log("Uploaded a data_url string!");
+      });
+    }
+
     // await addDoc(collection(db, "tweets"), {
     //   tweet,
     //   createdAt: Date.now(),
     //   creatorId: userObj.uid,
     // });
-    // setValue("tweet", "");
+    setValue("tweet", "");
+  };
+
+  const changeImg = (e: React.FormEvent<HTMLInputElement>) => {
+    const {
+      currentTarget: { files },
+    } = e;
+    // fileReader API 사용
+
+    if (files !== null) {
+      const file = files[0];
+      const reader = new FileReader();
+      reader.onloadend = (finishedEvent) => {
+        const targetResult: any = finishedEvent.target?.result;
+        setAttachment(targetResult);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   useEffect(() => {
@@ -88,10 +107,12 @@ function Home({ userObj }: IHomeprops) {
         id: doc.id,
         userId: doc.data().creatorId,
       }));
-      console.log(tweetArray);
       setTweets(tweetArray);
     });
   }, []);
+  const onClearPhoto = () => {
+    setAttachment(null);
+  };
 
   return (
     <div>
@@ -101,8 +122,19 @@ function Home({ userObj }: IHomeprops) {
           type="text"
           placeholder="What's on your mind?"
         />
-        <input type="file" accept="image/*" {...register("image")} />
+        <input
+          type="file"
+          accept="image/*"
+          {...register("image")}
+          onChange={changeImg}
+        />
         <input type="submit" value="Tweet" />
+        {attachment && (
+          <div>
+            <img src={attachment} width="50px" height="50px" alt="" />
+            <button onClick={onClearPhoto}>Clear</button>
+          </div>
+        )}
       </form>
       <div>
         {tweets.map((tweet) => (

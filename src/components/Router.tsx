@@ -12,7 +12,6 @@ interface AppRouterProps {
 }
 
 const AppRouter = ({ isLoggedIn, userObj }: AppRouterProps) => {
-  console.log(isLoggedIn);
   return (
     <HashRouter>
       {isLoggedIn && <Navigation />}

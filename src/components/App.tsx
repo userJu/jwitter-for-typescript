@@ -17,7 +17,6 @@ function App() {
       if (user) {
         setIsLoggedIn(true);
         setUserObj({ uid: user.uid });
-        console.log(user);
       } else {
         setIsLoggedIn(false);
       }

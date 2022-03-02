@@ -12,8 +12,13 @@ import { db, storage } from "../firebase";
 import { useEffect, useState } from "react";
 import Tweet from "../components/Tweet";
 import { runInNewContext } from "vm";
-import { getStorage, ref, uploadString } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
+import {
+  ref,
+  uploadString,
+  getStorage,
+  getDownloadURL,
+} from "firebase/storage";
 
 interface ITweets {
   text: string;
@@ -65,18 +70,24 @@ function Home({ userObj }: IHomeprops) {
   const onSubmit = async ({ tweet, image }: any) => {
     // Create a child reference
     const imagesRef = ref(storage, `${userObj.uid}/${uuidv4()}`);
-
+    console.log(tweet);
+    console.log(image);
     if (attachment !== null) {
-      uploadString(imagesRef, attachment, "data_url").then((snapshot) => {
-        console.log("Uploaded a data_url string!");
-      });
-    }
+      uploadString(imagesRef, attachment, "data_url");
+      // const attachmentUrl = await getDownloadURL(
+      //   ref(storage, `${userObj.uid}/${uuidv4()}`)
+      // );
+      // console.log(attachmentUrl);
+      // const tweetObj = {
+      //   text: tweet,
+      //   createdAt: Date.now(),
+      //   creatorId: userObj.uid,
+      //   attachmentUrl,
 
-    // await addDoc(collection(db, "tweets"), {
-    //   tweet,
-    //   createdAt: Date.now(),
-    //   creatorId: userObj.uid,
-    // });
+      // };
+    }
+    setAttachment("");
+
     setValue("tweet", "");
   };
 

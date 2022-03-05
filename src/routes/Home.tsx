@@ -24,6 +24,7 @@ interface ITweets {
   text: string;
   createdAt: number;
   id: string;
+  attachmentUrl: string;
   userId: {
     uid: string;
   };
@@ -40,7 +41,7 @@ function Home({ userObj }: IHomeprops) {
   const { register, handleSubmit, setValue, watch } = useForm();
   const [tweets, setTweets] = useState<ITweets[]>([]);
   const [attachment, setAttachment] = useState<null | string>(null);
-  //
+
   // const getTweets = async () => {
   //   // const docSnap = await getDoc(collection(db, "tweets"));
 
@@ -65,7 +66,6 @@ function Home({ userObj }: IHomeprops) {
   //     setTweets((prev) => [tweetObj, ...prev]);
   //   });
   // };
-  //
 
   const onSubmit = async ({ tweet, image }: any) => {
     // Create a child reference
@@ -73,18 +73,15 @@ function Home({ userObj }: IHomeprops) {
     console.log(tweet);
     console.log(image);
     if (attachment !== null) {
-      uploadString(imagesRef, attachment, "data_url");
-      // const attachmentUrl = await getDownloadURL(
-      //   ref(storage, `${userObj.uid}/${uuidv4()}`)
-      // );
-      // console.log(attachmentUrl);
-      // const tweetObj = {
-      //   text: tweet,
-      //   createdAt: Date.now(),
-      //   creatorId: userObj.uid,
-      //   attachmentUrl,
-
-      // };
+      await uploadString(imagesRef, attachment, "data_url");
+      const attachmentUrl = await getDownloadURL(imagesRef);
+      console.log(attachmentUrl);
+      const tweetObj = {
+        text: tweet,
+        createdAt: Date.now(),
+        creatorId: userObj.uid,
+        attachmentUrl,
+      };
     }
     setAttachment("");
 
@@ -115,6 +112,7 @@ function Home({ userObj }: IHomeprops) {
         text: doc.data().tweet,
         createdAt: doc.data().createdAt,
         creatorId: doc.data().creatorId,
+        attachmentUrl: doc.data().attachmentUrl,
         id: doc.id,
         userId: doc.data().creatorId,
       }));

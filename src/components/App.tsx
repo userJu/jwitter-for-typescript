@@ -5,6 +5,7 @@ import { authService } from "../firebase";
 
 interface IUserObj {
   uid: string;
+  displayName: string;
 }
 
 function App() {
@@ -16,18 +17,31 @@ function App() {
     onAuthStateChanged(authService, (user) => {
       if (user) {
         setIsLoggedIn(true);
-        setUserObj({ uid: user.uid });
+        setUserObj({ uid: user.uid, displayName: user.displayName! });
       } else {
         setIsLoggedIn(false);
       }
       setInit(true);
     });
   }, []);
+  const refreshUser = () => {
+    const user = authService.currentUser;
+    if (user !== null) {
+      setUserObj({
+        uid: user.uid,
+        displayName: user.displayName || "",
+      });
+    }
+  };
 
   return (
     <>
       {init ? (
-        <AppRouter isLoggedIn={isLoggedIn} userObj={userObj!} />
+        <AppRouter
+          refreshUser={refreshUser}
+          isLoggedIn={isLoggedIn}
+          userObj={userObj!}
+        />
       ) : (
         "Initializing..."
       )}

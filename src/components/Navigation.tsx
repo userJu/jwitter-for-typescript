@@ -1,7 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const Navigation = () => {
+interface INavigationProps {
+  userObj: { uid: string; displayName: string };
+}
+
+const Navigation = ({ userObj }: INavigationProps) => {
   return (
     <nav>
       <ul>
@@ -9,7 +13,7 @@ const Navigation = () => {
           <Link to="/">Home</Link>
         </li>
         <li>
-          <Link to="/profile">My Profile</Link>
+          <Link to="/profile">{userObj.displayName} Profile</Link>
         </li>
       </ul>
     </nav>

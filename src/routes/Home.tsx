@@ -7,6 +7,7 @@ import {
   getDocs,
   onSnapshot,
   doc,
+  setDoc,
 } from "firebase/firestore";
 import { db, storage } from "../firebase";
 import { useEffect, useState } from "react";
@@ -20,15 +21,13 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 
-interface ITweets {
-  text: string;
-  createdAt: number;
-  id: string;
+export interface ITweets {
   attachmentUrl: string;
-  userId: {
-    uid: string;
-  };
+  createdAt: number;
   creatorId: string;
+  id: string;
+  text: string;
+  userId: string;
 }
 
 interface IHomeprops {
@@ -40,8 +39,8 @@ interface IHomeprops {
 function Home({ userObj }: IHomeprops) {
   const { register, handleSubmit, setValue, watch } = useForm();
   const [tweets, setTweets] = useState<ITweets[]>([]);
-  const [attachment, setAttachment] = useState<null | string>(null);
-
+  const [attachment, setAttachment] = useState<string>("");
+  //
   // const getTweets = async () => {
   //   // const docSnap = await getDoc(collection(db, "tweets"));
 
@@ -66,23 +65,24 @@ function Home({ userObj }: IHomeprops) {
   //     setTweets((prev) => [tweetObj, ...prev]);
   //   });
   // };
+  //
 
   const onSubmit = async ({ tweet, image }: any) => {
     // Create a child reference
     const imagesRef = ref(storage, `${userObj.uid}/${uuidv4()}`);
-    console.log(tweet);
-    console.log(image);
-    if (attachment !== null) {
+    let attachmentUrl = "";
+    if (attachment !== "") {
       await uploadString(imagesRef, attachment, "data_url");
-      const attachmentUrl = await getDownloadURL(imagesRef);
-      console.log(attachmentUrl);
-      const tweetObj = {
-        text: tweet,
-        createdAt: Date.now(),
-        creatorId: userObj.uid,
-        attachmentUrl,
-      };
+      attachmentUrl = await getDownloadURL(imagesRef);
     }
+    const tweetObj = {
+      text: tweet,
+      createdAt: Date.now(),
+      creatorId: userObj.uid,
+      attachmentUrl,
+    };
+
+    await setDoc(doc(collection(db, "tweets")), tweetObj);
     setAttachment("");
 
     setValue("tweet", "");
@@ -93,7 +93,6 @@ function Home({ userObj }: IHomeprops) {
       currentTarget: { files },
     } = e;
     // fileReader API 사용
-
     if (files !== null) {
       const file = files[0];
       const reader = new FileReader();
@@ -104,23 +103,22 @@ function Home({ userObj }: IHomeprops) {
       reader.readAsDataURL(file);
     }
   };
-
   useEffect(() => {
     const q = query(collection(db, "tweets"));
     onSnapshot(q, (querySnapshot) => {
       const tweetArray: any = querySnapshot.docs.map((doc) => ({
-        text: doc.data().tweet,
+        text: doc.data().text,
         createdAt: doc.data().createdAt,
         creatorId: doc.data().creatorId,
-        attachmentUrl: doc.data().attachmentUrl,
         id: doc.id,
         userId: doc.data().creatorId,
+        attachmentUrl: doc.data().attachmentUrl,
       }));
       setTweets(tweetArray);
     });
   }, []);
   const onClearPhoto = () => {
-    setAttachment(null);
+    setAttachment("");
   };
 
   return (

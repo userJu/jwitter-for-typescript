@@ -6,20 +6,25 @@ import Navigation from "./Navigation";
 
 interface AppRouterProps {
   isLoggedIn: boolean;
+  refreshUser: () => void;
   userObj: {
     uid: string;
+    displayName: string;
   };
 }
 
-const AppRouter = ({ isLoggedIn, userObj }: AppRouterProps) => {
+const AppRouter = ({ refreshUser, isLoggedIn, userObj }: AppRouterProps) => {
   return (
     <HashRouter>
-      {isLoggedIn && <Navigation />}
+      {isLoggedIn && <Navigation userObj={userObj} />}
       <Routes>
         {isLoggedIn ? (
           <>
             <Route path="/" element={<Home userObj={userObj} />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route
+              path="/profile"
+              element={<Profile userObj={userObj} refreshUser={refreshUser} />}
+            />
           </>
         ) : (
           <Route path="/" element={<Auth />} />

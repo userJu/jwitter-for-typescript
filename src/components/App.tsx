@@ -4,8 +4,8 @@ import { onAuthStateChanged } from "firebase/auth";
 import { authService } from "../firebase";
 
 interface IUserObj {
-  uid: string;
-  displayName: string;
+  uid?: string;
+  displayName?: string;
 }
 
 function App() {
@@ -20,6 +20,7 @@ function App() {
         setUserObj({ uid: user.uid, displayName: user.displayName! });
       } else {
         setIsLoggedIn(false);
+        setUserObj({ uid: undefined, displayName: undefined });
       }
       setInit(true);
     });

@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 interface INavigationProps {
-  userObj: { uid: string; displayName: string };
+  userObj: { uid?: string; displayName?: string };
 }
 
 const Navigation = ({ userObj }: INavigationProps) => {

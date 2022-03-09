@@ -8,8 +8,8 @@ interface AppRouterProps {
   isLoggedIn: boolean;
   refreshUser: () => void;
   userObj: {
-    uid: string;
-    displayName: string;
+    uid?: string;
+    displayName?: string;
   };
 }
 

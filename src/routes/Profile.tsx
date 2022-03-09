@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { getAuth, updateProfile } from "firebase/auth";
 
 interface IProfileProps {
-  userObj: { uid: string; displayName: string };
+  userObj: { uid?: string; displayName?: string };
   refreshUser: () => void;
 }
 
@@ -17,6 +17,7 @@ function Profile({ userObj, refreshUser }: IProfileProps) {
   const onLogOutClick = () => {
     authService.signOut();
     navigate("/");
+    refreshUser();
   };
   const getMyNweets = async () => {
     const q = query(

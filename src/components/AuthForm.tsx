@@ -90,7 +90,6 @@ const AuthForm = () => {
   };
 
   const onChange = (e: React.FormEvent<HTMLInputElement>) => {
-    console.log(e.currentTarget.name);
     const {
       currentTarget: { name, value },
     } = e;
@@ -128,7 +127,7 @@ const AuthForm = () => {
         />
       </Form>
       {error && <AuthError>{error}</AuthError>}
-      <hr />
+      <hr style={{ width: "100%" }} />
       <AuthSwitch onClick={toogleAccount}>
         {newAccount ? "Sign in" : "Create Account"}
       </AuthSwitch>

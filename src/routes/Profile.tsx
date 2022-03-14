@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { authService, db } from "../firebase";
-import { collection, query, where, getDocs } from "firebase/firestore";
 import { useForm } from "react-hook-form";
-import { getAuth, updateProfile } from "firebase/auth";
+import { updateProfile } from "firebase/auth";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -63,16 +62,6 @@ function Profile({ userObj, refreshUser }: IProfileProps) {
     navigate("/");
     refreshUser();
   };
-  const getMyNweets = async () => {
-    const q = query(
-      collection(db, "tweets"),
-      where("creatorId", "==", userObj.uid)
-    );
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      console.log(doc.data());
-    });
-  };
 
   const onChange = () => {
     if (watch("newName") !== newDisplayName) {
@@ -81,7 +70,6 @@ function Profile({ userObj, refreshUser }: IProfileProps) {
   };
 
   const onSubmit = async ({ newName }: any) => {
-    console.log(newName);
     if (userObj.displayName !== newName) {
       await updateProfile(authService.currentUser!, {
         displayName: newName,
@@ -89,10 +77,6 @@ function Profile({ userObj, refreshUser }: IProfileProps) {
       refreshUser();
     }
   };
-
-  useEffect(() => {
-    getMyNweets();
-  }, []);
 
   return (
     <Container>

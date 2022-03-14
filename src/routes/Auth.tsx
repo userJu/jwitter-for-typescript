@@ -45,7 +45,6 @@ function Auth() {
     const {
       currentTarget: { name },
     } = event;
-    console.log(name);
 
     if (name === "Google") {
       const provider = new GoogleAuthProvider();

@@ -39,7 +39,7 @@ const SubmitInput = styled.input`
   right: 0;
   background-color: #04aaff;
   height: 40px;
-  width: 40px;
+  width: 80px;
   padding: 10px 0px;
   text-align: center;
   border-radius: 20px;

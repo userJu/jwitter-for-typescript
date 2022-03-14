@@ -22,13 +22,12 @@ const TweetBox = styled.div`
     font-size: 14px;
   }
   img {
-    right: -10px;
-    top: 20px;
+    left: -25px;
+    top: -25px;
     position: absolute;
     border-radius: 50%;
     width: 50px;
     height: 50px;
-    margin-top: 10px;
   }
 `;
 const TweetEdit = styled.form`
@@ -42,7 +41,9 @@ const FormBtn = styled.input`
   margin-top: 15px;
   margin-bottom: 5px;
 `;
-const CancelBtn = styled.span``;
+const CancelBtn = styled.span`
+  cursor: pointer;
+`;
 const Actions = styled.div`
   position: absolute;
   right: 10px;

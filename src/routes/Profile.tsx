@@ -39,9 +39,14 @@ const FormBtn = styled.input`
   cursor: pointer;
 `;
 const LogoutBtn = styled.span`
-  cursor: pointer;
+  margin-top: 20px;
+  width: 100%;
+  padding: 7px 20px;
+  text-align: center;
+  color: white;
+  border-radius: 20px;
   background-color: tomato;
-  margin-top: 50px;
+  cursor: pointer;
 `;
 
 interface IProfileProps {

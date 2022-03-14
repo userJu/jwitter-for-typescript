@@ -6,17 +6,39 @@ import {
 import { authService } from "../firebase";
 import styled from "styled-components";
 
-const Form = styled.form``;
+const Container = styled.div`
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+`;
+const Form = styled.form`
+  width: 100%;
+  justify-content: space-between;
+`;
+
 const AuthInput = styled.input`
+  padding: 10px;
+  margin-bottom: 10px;
+  font-size: 12px;
+  color: black;
+
+  border-radius: 20px;
+  margin: 5px;
+  border: none;
+  text-align: center;
+  width: 150px;
+  background: white;
+  cursor: pointer;
+`;
+
+const AuthSubmit = styled.input`
   padding: 10px;
   border-radius: 30px;
   background-color: rgba(255, 255, 255, 1);
   margin-bottom: 10px;
   font-size: 12px;
   color: black;
-`;
-
-const AuthSubmit = styled.input`
   text-align: center;
   background: #04aaff;
   color: white;
@@ -83,7 +105,7 @@ const AuthForm = () => {
     setNewAccount((prev) => !prev);
   };
   return (
-    <>
+    <Container>
       <Form onSubmit={onSubmit}>
         <AuthInput
           name="email"
@@ -110,7 +132,7 @@ const AuthForm = () => {
       <AuthSwitch onClick={toogleAccount}>
         {newAccount ? "Sign in" : "Create Account"}
       </AuthSwitch>
-    </>
+    </Container>
   );
 };
 export default AuthForm;

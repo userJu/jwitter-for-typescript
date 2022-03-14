@@ -37,7 +37,6 @@ const AuthBtns = styled.div`
     text-align: center;
     width: 150px;
     background: white;
-    cursor: pointer;
   }
 `;
 
@@ -53,7 +52,6 @@ function Auth() {
       signInWithPopup(authService, provider)
         .then((result) => {
           const credential = GoogleAuthProvider.credentialFromResult(result);
-          const token = credential?.accessToken;
           const user = result.user;
         })
         .catch((error) => {

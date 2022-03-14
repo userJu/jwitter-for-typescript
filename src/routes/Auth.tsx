@@ -6,10 +6,40 @@ import {
 } from "firebase/auth";
 import { authService } from "../firebase";
 import AuthForm from "../components/AuthForm";
+import styled from "styled-components";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faTwitter,
+  faGoogle,
+  faGithub,
+} from "@fortawesome/free-brands-svg-icons";
 
-interface IForm {
-  email: string;
-}
+const Container = styled.div`
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+`;
+const AuthBtns = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 320px;
+  button {
+    cursor: pointer;
+    border-radius: 20px;
+    border: none;
+    padding: 10px 0px;
+    font-size: 12px;
+    text-align: center;
+    width: 150px;
+    background: white;
+    cursor: pointer;
+  }
+`;
 
 function Auth() {
   const onSocialClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -50,17 +80,25 @@ function Auth() {
   };
 
   return (
-    <div>
+    <Container>
+      <FontAwesomeIcon
+        icon={faTwitter}
+        color={"#04AAFF"}
+        size="3x"
+        style={{ marginBottom: 30 }}
+      />
       <AuthForm />
-      <div>
+      <AuthBtns>
         <button onClick={onSocialClick} name="Google">
           Continue with Google
+          <FontAwesomeIcon icon={faGoogle} />
         </button>
         <button onClick={onSocialClick} name="Github">
           Continue with Github
+          <FontAwesomeIcon icon={faGithub} />
         </button>
-      </div>
-    </div>
+      </AuthBtns>
+    </Container>
   );
 }
 

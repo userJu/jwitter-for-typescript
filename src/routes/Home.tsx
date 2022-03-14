@@ -3,6 +3,14 @@ import { db } from "../firebase";
 import { useEffect, useState } from "react";
 import Tweet from "../components/Tweet";
 import TweetFactory from "../components/TweetFactory";
+import styled from "styled-components";
+
+const Container = styled.div`
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+`;
 
 export interface ITweets {
   attachmentUrl: string;
@@ -65,9 +73,9 @@ function Home({ userObj }: IHomeprops) {
   }, []);
 
   return (
-    <div>
+    <Container>
       <TweetFactory userObj={userObj} />
-      <div>
+      <div style={{ marginTop: 30 }}>
         {tweets.map((tweet) => (
           <Tweet
             key={tweet.id}
@@ -76,7 +84,7 @@ function Home({ userObj }: IHomeprops) {
           />
         ))}
       </div>
-    </div>
+    </Container>
   );
 }
 

@@ -4,6 +4,42 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { authService } from "../firebase";
+import styled from "styled-components";
+
+const Form = styled.form``;
+const AuthInput = styled.input`
+  padding: 10px;
+  border-radius: 30px;
+  background-color: rgba(255, 255, 255, 1);
+  margin-bottom: 10px;
+  font-size: 12px;
+  color: black;
+`;
+
+const AuthSubmit = styled.input`
+  text-align: center;
+  background: #04aaff;
+  color: white;
+  margin-top: 10;
+  cursor: pointer;
+`;
+
+const AuthError = styled.span`
+  color: tomato;
+  text-align: center;
+  font-weight: 500;
+  font-size: 12px;
+`;
+
+const AuthSwitch = styled.span`
+  color: #04aaff;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-bottom: 50px;
+  display: block;
+  font-size: 12px;
+  text-decoration: underline;
+`;
 
 const AuthForm = () => {
   const [email, setEmail] = useState("");
@@ -48,32 +84,32 @@ const AuthForm = () => {
   };
   return (
     <>
-      <form onSubmit={onSubmit}>
-        <input
+      <Form onSubmit={onSubmit}>
+        <AuthInput
           name="email"
           type="email"
           placeholder="Email"
           required
           onChange={onChange}
         />
-        <input
+        <AuthInput
           name="password"
           type="password"
           placeholder="Password"
           required
           onChange={onChange}
         />
-        <input
+        <AuthSubmit
           type="submit"
           value={newAccount ? "Create Account" : "Log in"}
           required
         />
-      </form>
-      {error}
+      </Form>
+      {error && <AuthError>{error}</AuthError>}
       <hr />
-      <span onClick={toogleAccount}>
+      <AuthSwitch onClick={toogleAccount}>
         {newAccount ? "Sign in" : "Create Account"}
-      </span>
+      </AuthSwitch>
     </>
   );
 };

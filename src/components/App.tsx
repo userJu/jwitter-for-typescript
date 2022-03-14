@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import AppRouter from "./Router";
 import { onAuthStateChanged } from "firebase/auth";
 import { authService } from "../firebase";
+import { GlobalStyle } from "../GlobalStyle";
 
 interface IUserObj {
   uid?: string;
@@ -37,6 +38,7 @@ function App() {
 
   return (
     <>
+      <GlobalStyle />
       {init ? (
         <AppRouter
           refreshUser={refreshUser}
